@@ -169,6 +169,82 @@ class eway
     protected $transactionOption3;
 
     /**
+     * @var $responseCode string
+     */
+    protected $responseCode;
+
+    /**
+     * Response codes returned by the gateway
+     *
+     * The list of codes is complete according to the
+     * {@link http://www.eway.com.au/Developer/payment-code/transaction-results-response-codes.aspx eWAY Payment Gateway Bank Response Codes}
+     *
+     * @var $responseCodes array
+     */
+    public static $responseCodes = array(
+        '00' => array('text' => 'Transaction Approved', 'approved' => TRUE),
+        '01' => array('text' => 'Refer to Issuer', 'approved' => FALSE),
+        '02' => array('text' => 'Refer to Issuer, special', 'approved' => FALSE),
+        '03' => array('text' => 'No Merchant', 'approved' => FALSE),
+        '04' => array('text' => 'Pick Up Card', 'approved' => FALSE),
+        '05' => array('text' => 'Do Not Honour', 'approved' => FALSE),
+        '06' => array('text' => 'Error', 'approved' => FALSE),
+        '07' => array('text' => 'Pick Up Card, Special', 'approved' => FALSE),
+        '08' => array('text' => 'Honour With Identification', 'approved' => TRUE),
+        '09' => array('text' => 'Request In Progress', 'approved' => FALSE),
+        '10' => array('text' => 'Approved For Partial Amount', 'approved' => TRUE),
+        '11' => array('text' => 'Approved, VIP', 'approved' => TRUE),
+        '12' => array('text' => 'Invalid Transaction', 'approved' => FALSE),
+        '13' => array('text' => 'Invalid Amount', 'approved' => FALSE),
+        '14' => array('text' => 'Invalid Card Number', 'approved' => FALSE),
+        '15' => array('text' => 'No Issuer', 'approved' => FALSE),
+        '16' => array('text' => 'Approved, Update Track 3', 'approved' => TRUE),
+        '19' => array('text' => 'Re-enter Last Transaction', 'approved' => FALSE),
+        '21' => array('text' => 'No Action Taken', 'approved' => FALSE),
+        '22' => array('text' => 'Suspected Malfunction', 'approved' => FALSE),
+        '23' => array('text' => 'Unacceptable Transaction Fee', 'approved' => FALSE),
+        '25' => array('text' => 'Unable to Locate Record On File', 'approved' => FALSE),
+        '30' => array('text' => 'Format Error', 'approved' => FALSE),
+        '31' => array('text' => 'Bank Not Supported By Switch', 'approved' => FALSE),
+        '33' => array('text' => 'Expired Card, Capture', 'approved' => FALSE),
+        '34' => array('text' => 'Suspected Fraud, Retain Card', 'approved' => FALSE),
+        '35' => array('text' => 'Card Acceptor, Contact Acquirer, Retain Card', 'approved' => FALSE),
+        '36' => array('text' => 'Restricted Card, Retain Card', 'approved' => FALSE),
+        '37' => array('text' => 'Contact Acquirer Security Department, Retain Card', 'approved' => FALSE),
+        '38' => array('text' => 'PIN Tries Exceeded, Capture', 'approved' => FALSE),
+        '39' => array('text' => 'No Credit Account', 'approved' => FALSE),
+        '40' => array('text' => 'Function Not Supported', 'approved' => FALSE),
+        '41' => array('text' => 'Lost Card', 'approved' => FALSE),
+        '42' => array('text' => 'No Universal Account', 'approved' => FALSE),
+        '43' => array('text' => 'Stolen Card', 'approved' => FALSE),
+        '44' => array('text' => 'No Investment Account', 'approved' => FALSE),
+        '51' => array('text' => 'Insufficient Funds', 'approved' => FALSE),
+        '52' => array('text' => 'No Cheque Account', 'approved' => FALSE),
+        '53' => array('text' => 'No Savings Account', 'approved' => FALSE),
+        '54' => array('text' => 'Expired Card', 'approved' => FALSE),
+        '55' => array('text' => 'Incorrect PIN', 'approved' => FALSE),
+        '56' => array('text' => 'No Card Record', 'approved' => FALSE),
+        '57' => array('text' => 'Function Not Permitted to Cardholder', 'approved' => FALSE),
+        '58' => array('text' => 'Function Not Permitted to Terminal', 'approved' => FALSE),
+        '59' => array('text' => 'Suspected Fraud', 'approved' => FALSE),
+        '60' => array('text' => 'Acceptor Contact Acquirer', 'approved' => FALSE),
+        '61' => array('text' => 'Exceeds Withdrawal Limit', 'approved' => FALSE),
+        '62' => array('text' => 'Restricted Card', 'approved' => FALSE),
+        '63' => array('text' => 'Security Violation', 'approved' => FALSE),
+        '64' => array('text' => 'Original Amount Incorrect', 'approved' => FALSE),
+        '66' => array('text' => 'Acceptor Contact Acquirer, Security', 'approved' => FALSE),
+        '67' => array('text' => 'Capture Card', 'approved' => FALSE),
+        '75' => array('text' => 'PIN Tries Exceeded', 'approved' => FALSE),
+        '82' => array('text' => 'CVV Validation Error', 'approved' => FALSE),
+        '90' => array('text' => 'Cutoff In Progress', 'approved' => FALSE),
+        '91' => array('text' => 'Card Issuer Unavailable', 'approved' => FALSE),
+        '92' => array('text' => 'Unable To Route Transaction', 'approved' => FALSE),
+        '93' => array('text' => 'Cannot Complete, Violation Of The Law', 'approved' => FALSE),
+        '94' => array('text' => 'Duplicate Transaction', 'approved' => FALSE),
+        '96' => array('text' => 'System Error', 'approved' => FALSE)
+    );
+
+    /**
      * @param bool $test_gateway
      */
     public function __construct($test_gateway = FALSE)
@@ -716,7 +792,7 @@ class eway
 
         $this->loadPaymentResponse($this->transactionResponse);
 
-        if($this->getTransactionStatus() == 'True')
+        if($this->transactionStatus == 'True')
         {
             return TRUE;
         }
@@ -735,15 +811,20 @@ class eway
     {
         $response = simplexml_load_string($response_string);
 
-        $this->transactionError = $response->ewayTrxnError;
-        $this->transactionStatus = $response->ewayTrxnStatus;
-        $this->transactionNumber = $response->ewayTrxnNumber;
-        $this->transactionReference = $response->ewayTrxnReference;
-        $this->transactionAmount = $response->ewayReturnAmount;
-        $this->transactionAuthCode = $response->ewayAuthCode;
-        $this->transactionOption1 = $response->ewayTrxnOption1;
-        $this->transactionOption2 = $response->ewayTrxnOption2;
-        $this->transactionOption3 = $response->ewayTrxnOption3;
+        $this->transactionError = (string) $response->ewayTrxnError;
+        $this->transactionStatus = (string) $response->ewayTrxnStatus;
+        $this->transactionNumber = (string) $response->ewayTrxnNumber;
+        $this->transactionReference = (string) $response->ewayTrxnReference;
+        $this->transactionAmount = (string) $response->ewayReturnAmount;
+        $this->transactionAuthCode = (string) $response->ewayAuthCode;
+        $this->transactionOption1 = (string) $response->ewayTrxnOption1;
+        $this->transactionOption2 = (string) $response->ewayTrxnOption2;
+        $this->transactionOption3 = (string) $response->ewayTrxnOption3;
+
+        if(preg_match('/^\d{2}/', $this->transactionError, $code))
+        {
+            $this->responseCode = $code[0];
+        }
     }
 
     /**
@@ -816,5 +897,101 @@ class eway
     public function getTransactionOption3()
     {
         return $this->transactionOption3;
+    }
+
+    /**
+     * Get the response code
+     *
+     * @return string
+     */
+    public function getResponseCode()
+    {
+        return $this->responseCode;
+    }
+
+    /**
+     * Get the text corresponding to the response code
+     *
+     * @return bool|string
+     */
+    public function getResponseText()
+    {
+        if(!isset($this->responseCode))
+        {
+            return FALSE;
+        }
+        elseif(array_key_exists($this->responseCode, self::$responseCodes))
+        {
+            return self::$responseCodes[$this->responseCode]['text'];
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Check if the transaction was approved
+     *
+     * @return bool
+     */
+    public function getTransactionApproved()
+    {
+        if($this->transactionStatus != 'True')
+        {
+            return FALSE;
+        }
+        if(!isset($this->responseCode))
+        {
+            return FALSE;
+        }
+        elseif(array_key_exists($this->responseCode, self::$responseCodes))
+        {
+            return self::$responseCodes[$this->responseCode]['approved'];
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Check if a card number is compliant with international standards
+     *
+     * This is based on ISO/IEC 7812-1:2006
+     * {@link http://en.wikipedia.org/wiki/ISO/IEC_7812 ISO/IEC 7812}
+     *
+     * @param $cardNumber string
+     * @return bool
+     */
+    public static function checkCardNumber($cardNumber)
+    {
+        $cardNumber = preg_replace('/[^\d]/', '', $cardNumber);
+
+        if((strlen($cardNumber) < 16) OR (strlen($cardNumber) > 20))
+        {
+            return FALSE;
+        }
+
+        $cardNumber = str_split($cardNumber);
+        $checkDigit = intval(end($cardNumber));
+        $sum = 0;
+
+        for($i = 1; $i < count($cardNumber); $i++)
+        {
+            if($i&1)
+            {
+                $digit = $cardNumber[$i-1];
+            }
+            else
+            {
+                $number = sprintf('%02d', 2*$cardNumber[$i-1]);
+                $digit = $number[0] + $number[1];
+            }
+
+            $sum += $digit;
+        }
+
+        return $checkDigit == $sum % 10;
     }
 }
