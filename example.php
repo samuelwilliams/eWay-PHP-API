@@ -21,9 +21,9 @@
 * SOFTWARE.
 */
 
-require_once('eWay.php');
+require_once('eway.php');
 
-$eway = new eway(TRUE);
+$eway = new eway('REAL_TIME_CVN', TRUE);
 
 $eway
     ->setCustomerID('87654321')
