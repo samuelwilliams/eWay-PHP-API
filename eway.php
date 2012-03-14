@@ -24,6 +24,11 @@
 class eway
 {
     /**
+     * @var $gateway string The gateway to use
+     */
+    protected $gateway;
+
+    /**
      * @var $customerID string eWay customer ID
      */
     protected $customerID;
@@ -82,6 +87,16 @@ class eway
      * @var $cvn string The credit card CVN/CSV
      */
     protected $cvn;
+
+    /**
+     * @var $customerIP string The customer's IPv4 address
+     */
+    protected $customerIP;
+
+    /**
+     * @var $customerCountry string The customer's two character country code
+     */
+    protected $customerCountry;
 
     /**
      * @var $cardExpiryMonth string The credit card expiry month
@@ -169,6 +184,11 @@ class eway
     protected $transactionOption3;
 
     /**
+     * @var $transactionBeagleScore string
+     */
+    protected $transactionBeagleScore;
+
+    /**
      * @var $responseCode string
      */
     protected $responseCode;
@@ -245,17 +265,47 @@ class eway
     );
 
     /**
-     * @param bool $test_gateway
+     * @param string $gateway The type of gateway to use: 'REAL_TIME', 'REAL_TIME_CVN' or 'GEO_IP_ANTI_FRAUD'
+     * @param bool $test_gateway Use test gateway
      */
-    public function __construct($test_gateway = FALSE)
+    public function __construct($gateway = 'REAL_TIME_CVN', $test_gateway = FALSE)
     {
-        if($test_gateway)
+        if($gateway == 'REAL_TIME')
         {
-            $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
+            if($test_gateway)
+            {
+                $this->apiURL = 'https://www.eway.com.au/gateway/xmlpayment.asp';
+            }
+            else
+            {
+                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
+            }
+        }
+        elseif($gateway == 'REAL_TIME_CVN')
+        {
+            if($test_gateway)
+            {
+                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
+            }
+            else
+            {
+                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
+            }
+        }
+        elseif($gateway == 'GEO_IP_ANTI_FRAUD')
+        {
+            if($test_gateway)
+            {
+                $this->apiURL = 'https://www.eway.com.au/gateway/xmlpayment.asp';
+            }
+            else
+            {
+                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmlbeagle.asp';
+            }
         }
         else
         {
-            $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
+            throw new ErrorException('Gateway method is undefined, or invalid');
         }
     }
 
@@ -423,6 +473,60 @@ class eway
     public function getCVN()
     {
         return $this->cvn;
+    }
+
+    /**
+     * @param $country string The customer's country code
+     * @return bool
+     */
+    public function setCustomerCountry($country)
+    {
+        $country = strtoupper($country);
+
+        if(preg_match('/^[A-Z]{2}$/', $country))
+        {
+            $this->customerCountry = $country;
+            return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerCountry()
+    {
+        return $this->customerCountry;
+    }
+
+    /**
+     * @param $ip string The customer's IPv4 address
+     * @return bool
+     */
+    public function setCustomerIP($ip)
+    {
+        $ip = str_replace('/[^\d\.]/', '', $ip);
+
+        if(preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip))
+        {
+            $this->customerIP = $ip;
+            return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerIP()
+    {
+        return $this->customerIP;
     }
 
     /**
@@ -746,6 +850,8 @@ class eway
         if(isset($this->option1)) $xml->addChild('ewayOption1', $this->option1);
         if(isset($this->option2)) $xml->addChild('ewayOption2', $this->option2);
         if(isset($this->option3)) $xml->addChild('ewayOption3', $this->option3);
+        if(isset($this->customerIP)) $xml->addChild('ewayCustomerIPAddress', $this->customerIP);
+        if(isset($this->customerCountry)) $xml->addChild('ewayCustomerBillingCountry', $this->customerCountry);
 
         return $xml->asXML();
     }
@@ -781,7 +887,9 @@ class eway
             !isset($this->cardNumber) OR
             !isset($this->cardExpiryMonth) OR
             !isset($this->cardExpiryYear) OR
-            !isset($this->cvn))
+            (!isset($this->cvn) AND $this->gateway == 'REAL_TIME_CVN') OR
+            (!isset($this->customerIP) AND $this->gateway == 'GEO_IP_ANTI_FRAUD') OR
+            (!isset($this->customerCountry) AND $this->gateway == 'GEO_IP_ANTI_FRAUD'))
         {
             throw new ErrorException('Not all mandatory fields have been set.');
         }
@@ -820,6 +928,7 @@ class eway
         $this->transactionOption1 = (string) $response->{'ewayTrxnOption1'};
         $this->transactionOption2 = (string) $response->{'ewayTrxnOption2'};
         $this->transactionOption3 = (string) $response->{'ewayTrxnOption3'};
+        $this->transactionBeagleScore = (string) $response->{'ewayBeagleScore'};
 
         if(preg_match('/^\d{2}/', $this->transactionError, $code))
         {
@@ -897,6 +1006,14 @@ class eway
     public function getTransactionOption3()
     {
         return $this->transactionOption3;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionBeagleScore()
+    {
+        return $this->transactionBeagleScore;
     }
 
     /**
