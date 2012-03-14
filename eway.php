@@ -811,15 +811,15 @@ class eway
     {
         $response = simplexml_load_string($response_string);
 
-        $this->transactionError = (string) $response->ewayTrxnError;
-        $this->transactionStatus = (string) $response->ewayTrxnStatus;
-        $this->transactionNumber = (string) $response->ewayTrxnNumber;
-        $this->transactionReference = (string) $response->ewayTrxnReference;
-        $this->transactionAmount = (string) $response->ewayReturnAmount;
-        $this->transactionAuthCode = (string) $response->ewayAuthCode;
-        $this->transactionOption1 = (string) $response->ewayTrxnOption1;
-        $this->transactionOption2 = (string) $response->ewayTrxnOption2;
-        $this->transactionOption3 = (string) $response->ewayTrxnOption3;
+        $this->transactionError = (string) $response->{'ewayTrxnError'};
+        $this->transactionStatus = (string) $response->{'ewayTrxnStatus'};
+        $this->transactionNumber = (string) $response->{'ewayTrxnNumber'};
+        $this->transactionReference = (string) $response->{'ewayTrxnReference'};
+        $this->transactionAmount = (string) $response->{'ewayReturnAmount'};
+        $this->transactionAuthCode = (string) $response->{'ewayAuthCode'};
+        $this->transactionOption1 = (string) $response->{'ewayTrxnOption1'};
+        $this->transactionOption2 = (string) $response->{'ewayTrxnOption2'};
+        $this->transactionOption3 = (string) $response->{'ewayTrxnOption3'};
 
         if(preg_match('/^\d{2}/', $this->transactionError, $code))
         {
