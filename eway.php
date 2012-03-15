@@ -24,182 +24,258 @@
 class eway
 {
     /**
-     * @var $gateway string The gateway to use
+     * The gateway to use.
+     *
+     * @var string
      */
     protected $gateway;
 
     /**
-     * @var $customerID string eWay customer ID
+     * The eWay customer ID.
+     *
+     * @var string
      */
     protected $customerID;
 
     /**
-     * @var $totalAmount int Transaction amount in cents
+     * Transaction amount in cents.
+     *
+     * @var int
      */
-    protected $totalAmount;
+    protected $paymentAmount;
 
     /**
-     * @var $customerFirstName string Customer's first name
+     * The customer's first name.
+     *
+     * @var string
      */
     protected $customerFirstName;
 
     /**
-     * @var $customerLastName string Customer's last name
+     * The customer's last name.
+     *
+     * @var string
      */
     protected $customerLastName;
 
     /**
-     * @var $cutomerEmail string Customer's email address
+     * The customer's email address.
+     *
+     * @var string
      */
     protected $customerEmail;
 
     /**
-     * @var $customerAddress string Customer's address
+     * The customer's address.
+     *
+     * @var string
      */
     protected $customerAddress;
 
     /**
-     * @var $customerPostcode string Customer's postcode
+     * The customer's postcode.
+     *
+     * @var string
      */
     protected $customerPostcode;
 
     /**
-     * @var $customerInvoiceDescription string Invoice description
+     * The customer invoice description.
+     *
+     * @var string
      */
     protected $customerInvoiceDescription;
 
     /**
-     * @var $customerInvoiceRef string Invoice reference
+     * The customer invoice reference.
+     *
+     * @var string
      */
     protected $customerInvoiceRef;
 
     /**
-     * @var $cardHoldersName string The name on the credit card
+     * The name on the credit card.
+     *
+     * @var string
      */
     protected $cardHoldersName;
 
     /**
-     * @var $cardNumber string The credit card number
+     * The credit card number.
+     *
+     * @var string
      */
     protected $cardNumber;
 
     /**
-     * @var $cvn string The credit card CVN/CSV
+     * The credit card card validation number (CVN).
+     *
+     * @var string
      */
     protected $cvn;
 
     /**
-     * @var $customerIP string The customer's IPv4 address
+     * The customer's IPv4 address
+     *
+     * @var string
      */
     protected $customerIP;
 
     /**
-     * @var $customerCountry string The customer's two character country code
+     * The customer's two character country code
+     *
+     * @var string
      */
     protected $customerCountry;
 
     /**
-     * @var $cardExpiryMonth string The credit card expiry month
+     * The two digit credit card expiry month
+     *
+     * @var string
      */
     protected $cardExpiryMonth;
 
     /**
-     * @var $cardExpiryYear string The credit card expiry year
+     * The two digit credit card expiry year
+     *
+     * @var string
      */
     protected $cardExpiryYear;
 
     /**
-     * @var $transactionNumber string The transaction number for the sale
+     * The user-defined transaction number for the
+     * payment. This is returned by the gateway and
+     * assigned to the variable $transactionReference.
+     *
+     * @var string
      */
-    protected $customerTransactionNumber;
+    protected $customerTransactionReference;
 
     /**
-     * @var $option1 string eWay option 1
+     * eWay option 1
+     *
+     * @var string
      */
     protected $option1;
 
     /**
-     * @var $option2 string eWay option 2
+     * eWay option 2
+     *
+     * @var string
      */
     protected $option2;
 
     /**
-     * @var $apiURL string API URL
-     */
-    protected $apiURL;
-
-    /**
-     * @var $option3 string eWay option 3
+     * eWay option 3
+     *
+     * @var string
      */
     protected $option3;
 
     /**
-     * @var $transactionResponse string
+     * The eWay gateway URL
+     *
+     * @var string
+     */
+    protected $gatewayURL;
+
+    /**
+     * The response from the gateway in XML format
+     *
+     * @var string
      */
     protected $transactionResponse;
 
     /**
-     * @var $transactionError string
+     * The transaction error message. This may
+     * also be a success message.
+     *
+     * @var string
      */
     protected $transactionError;
 
     /**
-     * @var $transactionStatus string
+     * The transaction status.
+     * For a successful transaction "True" is passed and
+     * for a failed transaction "False" is passed.
+     *
+     * @var string
      */
     protected $transactionStatus;
 
     /**
-     * @var $transactionNumber string
+     * The transaction number.
+     * This is a unique number assigned by eWay.
+     *
+     * @var string
      */
     protected $transactionNumber;
 
     /**
-     * @var $transactionReference string
+     * The transaction reference returned by the gateway.
+     * This should be the same as $customerTransactionReference.
+     *
+     * @var string
      */
     protected $transactionReference;
 
     /**
-     * @var $transactionAmount string
+     * The transaction amount returned by the gateway.
+     * This will not necessarily be the same as the $paymentAmount.
+     *
+     * @var string
      */
     protected $transactionAmount;
 
     /**
-     * @var $transactionAuthCode string
+     * If the transaction is successful, this is the bank authorisation number.
+     *
+     * @var string
      */
-    protected $transactionAuthCode;
+    protected $transactionAuthNumber;
 
     /**
-     * @var $transactionOption1 string
+     * The eWay option 1 returned by the gateway.
+     * This should be the same as $option1
+     *
+     * @var string
      */
     protected $transactionOption1;
 
     /**
-     * @var $transactionOption2 string
+     * The eWay option 2 returned by the gateway.
+     * This should be the same as $option2
+     *
+     * @var string
      */
     protected $transactionOption2;
 
     /**
-     * @var $transactionOption3 string
+     * The eWay option 3 returned by the gateway.
+     * This should be the same as $option3
+     *
+     * @var string
      */
     protected $transactionOption3;
 
     /**
-     * @var $transactionBeagleScore string
+     * @var string
      */
     protected $transactionBeagleScore;
 
     /**
-     * @var $responseCode string
+     * The two digit esponse code returned by the gateway.
+     *
+     * @var string
      */
     protected $responseCode;
 
     /**
      * Response codes returned by the gateway.
-     *
      * The list of codes is complete according to the
      * {@link http://www.eway.com.au/Developer/payment-code/transaction-results-response-codes.aspx eWAY Payment Gateway Bank Response Codes}.
      *
-     * @var $responseCodes array
+     * @var array
      */
     public static $responseCodes = array(
         '00' => array('text' => 'Transaction Approved', 'approved' => TRUE),
@@ -268,7 +344,7 @@ class eway
      * Two letter country codes and countries as defined by
      * {@link http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 ISO 3166-1 alpha-2}.
      *
-     * @var $countryCodes array
+     * @var array
      */
     public static $countryCodes = array(
         'AD' => 'Andorra',
@@ -527,7 +603,8 @@ class eway
      *
      * Chooses the payment method and whether is is a test payment.
      *
-     * @param string $gateway The type of gateway to use: 'REAL_TIME', 'REAL_TIME_CVN' or 'GEO_IP_ANTI_FRAUD'
+     * @param string $gateway The type of gateway to use: 'REAL_TIME',
+     * 'REAL_TIME_CVN' or 'GEO_IP_ANTI_FRAUD'
      * @param bool $test_gateway Use test gateway
      */
     public function __construct($gateway = 'REAL_TIME_CVN', $test_gateway = FALSE)
@@ -538,33 +615,33 @@ class eway
         {
             if($test_gateway)
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
+                $this->gatewayURL = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
             }
             else
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway/xmlpayment.asp';
+                $this->gatewayURL = 'https://www.eway.com.au/gateway/xmlpayment.asp';
             }
         }
         elseif($this->gateway == 'REAL_TIME_CVN')
         {
             if($test_gateway)
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
+                $this->gatewayURL = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
             }
             else
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
+                $this->gatewayURL = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
             }
         }
         elseif($this->gateway == 'GEO_IP_ANTI_FRAUD')
         {
             if($test_gateway)
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
+                $this->gatewayURL = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
             }
             else
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmlbeagle.asp';
+                $this->gatewayURL = 'https://www.eway.com.au/gateway_cvn/xmlbeagle.asp';
             }
         }
         else
@@ -608,9 +685,9 @@ class eway
      * @param $amount float Payment amount in whole dollars
      * @return eway
      */
-    public function setTotalAmount($amount)
+    public function setPaymentAmount($amount)
     {
-        $this->totalAmount = (int) round($amount*100);
+        $this->paymentAmount = (int) round($amount*100);
 
         return $this;
     }
@@ -620,9 +697,9 @@ class eway
      *
      * @return int The total amount in cents
      */
-    public function getTotalAmount()
+    public function getPaymentAmount()
     {
-        return $this->totalAmount;
+        return $this->paymentAmount;
     }
 
     /**
@@ -752,6 +829,9 @@ class eway
     /**
      * Get the card's CVN.
      *
+     * This is only required if $gateway is set to
+     * "REAL_TIME_CVN"OR "GEO_IP_ANTI_FRAUD".
+     *
      * @return string The card's CVN
      */
     public function getCVN()
@@ -762,7 +842,7 @@ class eway
     /**
      * Set the customer's country code.
      *
-     * This is only needed if $gateway is set to "GEO_IP_ANTI_FRAUD".
+     * This is only required if $gateway is set to "GEO_IP_ANTI_FRAUD".
      *
      * @param $country string The customer's country code
      * @return eway
@@ -1030,14 +1110,14 @@ class eway
      * @return eway
      * @throws ErrorException The customer's transaction number
      */
-    public function setCustomerTransactionNumber($number)
+    public function setCustomerTransactionReference($number)
     {
         if(strlen($number) > 16)
         {
             throw new ErrorException('Transaction number must not exceed sixteen (16) characters in length');
         }
 
-        $this->customerTransactionNumber = $number;
+        $this->customerTransactionReference = $number;
 
         return $this;
     }
@@ -1047,9 +1127,9 @@ class eway
      *
      * @return string The customer's transaction number
      */
-    public function getCustomerTransactionNumber()
+    public function getCustomerTransactionReference()
     {
-        return $this->customerTransactionNumber;
+        return $this->customerTransactionReference;
     }
 
     /**
@@ -1162,7 +1242,7 @@ class eway
         $xml = new SimpleXMLElement('<ewaygateway/>');
 
         if(isset($this->customerID)) $xml->addChild('ewayCustomerID', $this->customerID);
-        if(isset($this->totalAmount)) $xml->addChild('ewayTotalAmount', $this->totalAmount);
+        if(isset($this->paymentAmount)) $xml->addChild('ewayTotalAmount', $this->paymentAmount);
         if(isset($this->cardHoldersName)) $xml->addChild('ewayCardHoldersName', $this->cardHoldersName);
         if(isset($this->cardNumber)) $xml->addChild('ewayCardNumber', $this->cardNumber);
         if(isset($this->cardExpiryMonth)) $xml->addChild('ewayCardExpiryMonth', $this->cardExpiryMonth);
@@ -1175,7 +1255,7 @@ class eway
         if(isset($this->customerPostcode)) $xml->addChild('ewayCustomerPostcode', $this->customerPostcode);
         if(isset($this->customerInvoiceDescription)) $xml->addChild('ewayCustomerInvoiceDescription', $this->customerInvoiceDescription);
         if(isset($this->customerInvoiceRef)) $xml->addChild('ewayCustomerInvoiceRef', $this->customerInvoiceRef);
-        if(isset($this->customerTransactionNumber)) $xml->addChild('ewayTrxnNumber', $this->customerTransactionNumber);
+        if(isset($this->customerTransactionReference)) $xml->addChild('ewayTrxnNumber', $this->customerTransactionReference);
         if(isset($this->option1)) $xml->addChild('ewayOption1', $this->option1);
         if(isset($this->option2)) $xml->addChild('ewayOption2', $this->option2);
         if(isset($this->option3)) $xml->addChild('ewayOption3', $this->option3);
@@ -1193,7 +1273,7 @@ class eway
      */
     protected function sendXML($xml)
     {
-        $ch = curl_init($this->apiURL);
+        $ch = curl_init($this->gatewayURL);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
@@ -1203,22 +1283,22 @@ class eway
     }
 
     /**
-     * Runs the payment and returns 'True' upon successful payment.
+     * Runs the payment and returns True upon successful payment.
+     * If mandatory fields needed by the chosen gateway are not set,
+     * this function will throw an exception.
      *
-     * If there are mandatory fields not set, this function will throw an exception.
-     *
-     * @return bool If the payment has been successful or not
+     * @return bool Whether the payment has been successful or not
      * @throws ErrorException
      */
     public function pay()
     {
         if( !isset($this->customerID) OR
-            !isset($this->totalAmount) OR
+            !isset($this->paymentAmount) OR
             !isset($this->cardHoldersName) OR
             !isset($this->cardNumber) OR
             !isset($this->cardExpiryMonth) OR
             !isset($this->cardExpiryYear) OR
-            (!isset($this->cvn) AND $this->gateway == 'REAL_TIME_CVN') OR
+            (!isset($this->cvn) AND ($this->gateway == 'REAL_TIME_CVN' OR $this->gateway == 'GEO_IP_ANTI_FRAUD')) OR
             (!isset($this->customerIP) AND $this->gateway == 'GEO_IP_ANTI_FRAUD') OR
             (!isset($this->customerCountry) AND $this->gateway == 'GEO_IP_ANTI_FRAUD'))
         {
@@ -1242,7 +1322,8 @@ class eway
     }
 
     /**
-     * Takes XML from the payment response and loads into the response transaction variables.
+     * Takes XML from the payment response and loads into the
+     * response transaction variables.
      *
      * @param $response_string string The payment response in XML format
      */
@@ -1255,7 +1336,7 @@ class eway
         $this->transactionNumber = (string) $response->{'ewayTrxnNumber'};
         $this->transactionReference = (string) $response->{'ewayTrxnReference'};
         $this->transactionAmount = (string) $response->{'ewayReturnAmount'};
-        $this->transactionAuthCode = (string) $response->{'ewayAuthCode'};
+        $this->transactionAuthNumber = (string) $response->{'ewayAuthCode'};
         $this->transactionOption1 = (string) $response->{'ewayTrxnOption1'};
         $this->transactionOption2 = (string) $response->{'ewayTrxnOption2'};
         $this->transactionOption3 = (string) $response->{'ewayTrxnOption3'};
@@ -1268,7 +1349,10 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the transaction error message.
+     * This is also a success message.
+     *
+     * @return string The transaction error message
      */
     public function getTransactionError()
     {
@@ -1276,7 +1360,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the transaction status.
+     *
+     * @return string The transaction status
      */
     public function getTransactionStatus()
     {
@@ -1284,7 +1370,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the transaction number.
+     *
+     * @return string The transaction number
      */
     public function getTransactionNumber()
     {
@@ -1292,7 +1380,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the transaction reference.
+     *
+     * @return string The transaction reference
      */
     public function getTransactionReference()
     {
@@ -1300,7 +1390,11 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the returned transaction amount. This is the
+     * amount returned by the gateway, and may not nessecarily
+     * be the same as the one sent to the gateway.
+     *
+     * @return string The returned transaction amount
      */
     public function getTransactionAmount()
     {
@@ -1308,15 +1402,19 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the transaction authorisation code.
+     *
+     * @return string The transaction authorisation code
      */
-    public function getTransactionAuthCode()
+    public function getTransactionAuthNumber()
     {
-        return $this->transactionAuthCode;
+        return $this->transactionAuthNumber;
     }
 
     /**
-     * @return string
+     * Get the eWay transaction option 1
+     *
+     * @return string The eWay transaction option 1
      */
     public function getTransactionOption1()
     {
@@ -1324,7 +1422,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the eWay transaction option 2
+     *
+     * @return string The eWay transaction option 2
      */
     public function getTransactionOption2()
     {
@@ -1332,7 +1432,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the eWay transaction option 3
+     *
+     * @return string The eWay transaction option 3
      */
     public function getTransactionOption3()
     {
@@ -1340,7 +1442,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the transaction's beagle anti-fraud score.
+     *
+     * @return string The beagle score
      */
     public function getTransactionBeagleScore()
     {
@@ -1348,9 +1452,9 @@ class eway
     }
 
     /**
-     * Get the response code
+     * Get the response code.
      *
-     * @return string
+     * @return string The response code
      */
     public function getResponseCode()
     {
@@ -1358,9 +1462,10 @@ class eway
     }
 
     /**
-     * Get the text corresponding to the response code
+     * Get the text corresponding to the response code.
      *
-     * @return bool|string Returns false if the response codes are not set or the code is not known, or returns the text
+     * @return bool|string Returns false if the response
+     * codes are not set or the code is not known, or returns the text
      */
     public function getResponseText()
     {
@@ -1379,9 +1484,9 @@ class eway
     }
 
     /**
-     * Check if the transaction was approved
+     * Check if the transaction was approved.
      *
-     * @return bool
+     * @return bool Whether or not the transaction was approved
      */
     public function getTransactionApproved()
     {
@@ -1406,11 +1511,16 @@ class eway
     /**
      * Check if a card number is valid.
      *
+     * This function should be used to validate the
+     * card number before sending it to the gateway.
+     * This will cut down response time if the credit
+     * card has been entered incorrectly.
+     *
      * This is based on ISO/IEC 7812-1:2006
      * {@link http://en.wikipedia.org/wiki/ISO/IEC_7812 ISO/IEC 7812}.
      *
      * @param $cardNumber string
-     * @return bool
+     * @return bool Returns true if the card is valid
      */
     public static function checkCardNumber($cardNumber)
     {
