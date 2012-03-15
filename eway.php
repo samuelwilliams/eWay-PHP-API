@@ -194,10 +194,10 @@ class eway
     protected $responseCode;
 
     /**
-     * Response codes returned by the gateway
+     * Response codes returned by the gateway.
      *
      * The list of codes is complete according to the
-     * {@link http://www.eway.com.au/Developer/payment-code/transaction-results-response-codes.aspx eWAY Payment Gateway Bank Response Codes}
+     * {@link http://www.eway.com.au/Developer/payment-code/transaction-results-response-codes.aspx eWAY Payment Gateway Bank Response Codes}.
      *
      * @var $responseCodes array
      */
@@ -616,7 +616,7 @@ class eway
     }
 
     /**
-     * Get the total amount
+     * Get the payment amount.
      *
      * @return int The total amount in cents
      */
@@ -647,7 +647,7 @@ class eway
     }
 
     /**
-     * Get the card holder's name
+     * Get the card holder's name.
      *
      * @return string
      */
@@ -688,10 +688,10 @@ class eway
     }
 
     /**
-     * Sets the card expiry
+     * Sets the card expiry.
      *
-     * @param $month string|int
-     * @param $year string|int
+     * @param $month string|int Two digit month.
+     * @param $year string|int Two digit year.
      * @return eway
      * @throws ErrorException
      */
@@ -709,6 +709,8 @@ class eway
     }
 
     /**
+     * Gets the card expiry month.
+     *
      * @return string
      */
     public function getCardExpiryMonth()
@@ -717,6 +719,8 @@ class eway
     }
 
     /**
+     * Gets the card expiry year
+     *
      * @return string
      */
     public function getCardExpiryYear()
@@ -841,7 +845,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the customer's first name.
+     *
+     * @return string The customer's first name
      */
     public function getCustomerFirstName()
     {
@@ -849,8 +855,9 @@ class eway
     }
 
     /**
-     * Set's the customer's last name
-     * @param $name string
+     * Sets the customer's last name.
+     *
+     * @param $name string The customer's last name
      * @return eway
      * @throws ErrorException
      */
@@ -869,7 +876,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the customer's last name.
+     *
+     * @return string The customer's last name
      */
     public function getCustomerLastName()
     {
@@ -877,22 +886,26 @@ class eway
     }
 
     /**
-     * Set's the customer's email
-     * @param $email string
+     * Sets the customer's email.
+     *
+     * @param $email string The customer's email
      * @return eway
      */
     public function setCustomerEmail($email)
     {
-        if(preg_match('/[\w-\.]+@(?:[\w]+\.)+[a-zA-Z]{2,4}/', $email))
+        if(!preg_match('/[\w-\.]+@(?:[\w]+\.)+[a-zA-Z]{2,4}/', $email))
         {
-            $this->customerEmail = $email;
+            throw new ErrorException('Invalid email address.');
         }
 
+        $this->customerEmail = $email;
         return $this;
     }
 
     /**
-     * @return string
+     * Get the customer's email address.
+     *
+     * @return string The customer's email address
      */
     public function getCustomerEmail()
     {
@@ -900,8 +913,9 @@ class eway
     }
 
     /**
-     * Set's the customer's postal/residential address
-     * @param $address string
+     * Sets the customer's postal/residential address.
+     *
+     * @param $address string The customer's postal/residential address
      * @return eway
      */
     public function setCustomerAddress($address)
@@ -919,7 +933,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the customer's postal/residential address.
+     *
+     * @return string The customer's postal/residential address.
      */
     public function getCustomerAddress()
     {
@@ -927,8 +943,9 @@ class eway
     }
 
     /**
-     * Sets the customer's postcode
-     * @param $postcode string|int
+     * Sets the customer's postcode.
+     *
+     * @param $postcode string|int The customer's postcode
      * @return eway
      */
     public function setCustomerPostcode($postcode)
@@ -939,7 +956,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Sets the customer's postcode.
+     *
+     * @return string The customer's postcode
      */
     public function getCustomerPostcode()
     {
@@ -947,8 +966,9 @@ class eway
     }
 
     /**
-     * Sets the invoice description
-     * @param $description string
+     * Sets the customer's invoice description.
+     *
+     * @param $description string The invoice description
      * @return eway
      */
     public function setCustomerInvoiceDescription($description)
@@ -966,7 +986,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the customer's invoice description.
+     *
+     * @return string The customer's invoice description
      */
     public function getCustomerInvoiceDescription()
     {
@@ -974,26 +996,27 @@ class eway
     }
 
     /**
-     * Sets the invoice reference
-     * @param $reference string
+     * Sets the customer's invoice reference.
+     *
+     * @param $reference string The customer's invoice reference
      * @return eway
+     * @throws ErrorException
      */
     public function setCustomerInvoiceReference($reference)
     {
         if(strlen($reference) > 50)
         {
-            $this->customerInvoiceRef = substr($reference, 0, 49);
-        }
-        else
-        {
-            $this->customerInvoiceRef = $reference;
+            throw new ErrorException('Customer invoice reference must not exceed fifty (50) characters in length');
         }
 
+        $this->customerInvoiceRef = $reference;
         return $this;
     }
 
     /**
-     * @return string
+     * Get the customer's invoice reference.
+     *
+     * @return string The customer's invoice reference.
      */
     public function getCustomerInvoiceReference()
     {
@@ -1001,10 +1024,11 @@ class eway
     }
 
     /**
-     * Sets the transaction number
+     * Sets the customer's transaction number.
+     *
      * @param $number string
      * @return eway
-     * @throws ErrorException
+     * @throws ErrorException The customer's transaction number
      */
     public function setCustomerTransactionNumber($number)
     {
@@ -1019,7 +1043,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the customer's transaction number.
+     *
+     * @return string The customer's transaction number
      */
     public function getCustomerTransactionNumber()
     {
@@ -1027,8 +1053,9 @@ class eway
     }
 
     /**
-     * Sets the eWay option 1
-     * @param $text string
+     * Sets the eWay option 1.
+     *
+     * @param $text string eWay option 1
      * @return eway
      */
     public function setOption1($text)
@@ -1046,7 +1073,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the eWay option 1.
+     *
+     * @return string eWay option 1
      */
     public function getOption1()
     {
@@ -1056,7 +1085,7 @@ class eway
     /**
      * Sets the eWay option 2.
      *
-     * @param $text string
+     * @param $text string eWay option 2
      * @return eway
      */
     public function setOption2($text)
@@ -1074,7 +1103,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the eWay option 2.
+     *
+     * @return string eWay option 2
      */
     public function getOption2()
     {
@@ -1082,8 +1113,9 @@ class eway
     }
 
     /**
-     * Sets the eWay option 3
-     * @param $text string
+     * Sets the eWay option 3.
+     *
+     * @param $text string eWay option 3
      * @return eway
      */
     public function setOption3($text)
@@ -1101,7 +1133,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the eWay option 3.
+     *
+     * @return string eWay option 3
      */
     public function getOption3()
     {
@@ -1109,7 +1143,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Get the transaction response from the gateway.
+     *
+     * @return string The transaction response in XML format
      */
     public function getTransactionResponse()
     {
@@ -1119,7 +1155,7 @@ class eway
     /**
      * Sets the XML packet used to make a payment.
      *
-     * @return string
+     * @return string The payment XML
      */
     public function setPaymentXML()
     {
@@ -1152,8 +1188,8 @@ class eway
     /**
      * Sends an XML packet to the gateway and returns the gateway response.
      *
-     * @param $xml string
-     * @return string
+     * @param $xml string The XML string to be sent
+     * @return string The gateway's response
      */
     protected function sendXML($xml)
     {
@@ -1169,7 +1205,9 @@ class eway
     /**
      * Runs the payment and returns 'True' upon successful payment.
      *
-     * @return bool
+     * If there are mandatory fields not set, this function will throw an exception.
+     *
+     * @return bool If the payment has been successful or not
      * @throws ErrorException
      */
     public function pay()
@@ -1204,9 +1242,9 @@ class eway
     }
 
     /**
-     * Takes XML from the payment response and loads into the variables
+     * Takes XML from the payment response and loads into the response transaction variables.
      *
-     * @param $response_string string
+     * @param $response_string string The payment response in XML format
      */
     public function loadPaymentResponse($response_string)
     {
@@ -1322,7 +1360,7 @@ class eway
     /**
      * Get the text corresponding to the response code
      *
-     * @return bool|string
+     * @return bool|string Returns false if the response codes are not set or the code is not known, or returns the text
      */
     public function getResponseText()
     {
