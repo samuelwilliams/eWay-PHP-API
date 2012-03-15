@@ -265,23 +265,29 @@ class eway
     );
 
     /**
+     * The class constructor.
+     *
+     * Chooses the payment method and whether is is a test payment.
+     *
      * @param string $gateway The type of gateway to use: 'REAL_TIME', 'REAL_TIME_CVN' or 'GEO_IP_ANTI_FRAUD'
      * @param bool $test_gateway Use test gateway
      */
     public function __construct($gateway = 'REAL_TIME_CVN', $test_gateway = FALSE)
     {
-        if($gateway == 'REAL_TIME')
+        $this->gateway = $gateway;
+
+        if($this->gateway == 'REAL_TIME')
         {
             if($test_gateway)
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway/xmlpayment.asp';
+                $this->apiURL = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
             }
             else
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
+                $this->apiURL = 'https://www.eway.com.au/gateway/xmlpayment.asp';
             }
         }
-        elseif($gateway == 'REAL_TIME_CVN')
+        elseif($this->gateway == 'REAL_TIME_CVN')
         {
             if($test_gateway)
             {
@@ -292,11 +298,11 @@ class eway
                 $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
             }
         }
-        elseif($gateway == 'GEO_IP_ANTI_FRAUD')
+        elseif($this->gateway == 'GEO_IP_ANTI_FRAUD')
         {
             if($test_gateway)
             {
-                $this->apiURL = 'https://www.eway.com.au/gateway/xmlpayment.asp';
+                $this->apiURL = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
             }
             else
             {
@@ -310,7 +316,8 @@ class eway
     }
 
     /**
-     * Sets the unique eWay customer ID
+     * Sets the unique eWay customer ID.
+     *
      * @param $id string
      * @return eway
      * @throws ErrorException
@@ -328,6 +335,8 @@ class eway
     }
 
     /**
+     * Get the customer ID.
+     *
      * @return string
      */
     public function getCustomerID()
@@ -336,18 +345,21 @@ class eway
     }
 
     /**
-     * Sets the payment amount
+     * Sets the payment amount.
+     *
      * @param $amount float Payment amount in whole dollars
      * @return eway
      */
     public function setTotalAmount($amount)
     {
-        $this->totalAmount = floatval($amount)*100;
+        $this->totalAmount = (int) round($amount*100);
 
         return $this;
     }
 
     /**
+     * Get the total amount
+     *
      * @return int The total amount in cents
      */
     public function getTotalAmount()
@@ -356,7 +368,8 @@ class eway
     }
 
     /**
-     * Sets the card holder's name
+     * Sets the card holder's name.
+     *
      * @param $name string
      * @return eway
      * @throws ErrorException
@@ -376,6 +389,8 @@ class eway
     }
 
     /**
+     * Get the card holder's name
+     *
      * @return string
      */
     public function getCardHoldersName()
@@ -384,8 +399,9 @@ class eway
     }
 
     /**
-     * Sets the card number
-     * @param $number string
+     * Sets the card number.
+     *
+     * @param $number string The card number
      * @return eway
      * @throws ErrorException
      */
@@ -404,7 +420,9 @@ class eway
     }
 
     /**
-     * @return string
+     * Gets the card number.
+     *
+     * @return string The card number
      */
     public function getCardNumber()
     {
@@ -413,6 +431,7 @@ class eway
 
     /**
      * Sets the card expiry
+     *
      * @param $month string|int
      * @param $year string|int
      * @return eway
@@ -448,7 +467,8 @@ class eway
     }
 
     /**
-     * Sets the card's CSV/CVN
+     * Sets the customer's CVN.
+     *
      * @param $cvn string|int
      * @return eway
      * @throws ErrorException
@@ -468,6 +488,8 @@ class eway
     }
 
     /**
+     *
+     *
      * @return string
      */
     public function getCVN()
@@ -763,7 +785,8 @@ class eway
     }
 
     /**
-     * Sets the eWay option 2
+     * Sets the eWay option 2.
+     *
      * @param $text string
      * @return eway
      */
@@ -825,7 +848,8 @@ class eway
     }
 
     /**
-     * Sets the XML packet used to make a payment
+     * Sets the XML packet used to make a payment.
+     *
      * @return string
      */
     public function setPaymentXML()
@@ -857,8 +881,8 @@ class eway
     }
 
     /**
-     * Sends an XML packet to the gateway
-     * and returns the gateway response
+     * Sends an XML packet to the gateway and returns the gateway response.
+     *
      * @param $xml string
      * @return string
      */
@@ -874,8 +898,8 @@ class eway
     }
 
     /**
-     * Runs the payment and returns 'True'
-     * upon successful payment
+     * Runs the payment and returns 'True' upon successful payment.
+     *
      * @return bool
      * @throws ErrorException
      */
@@ -911,8 +935,8 @@ class eway
     }
 
     /**
-     * Takes XML from the payment response and loads
-     * into the variables
+     * Takes XML from the payment response and loads into the variables
+     *
      * @param $response_string string
      */
     public function loadPaymentResponse($response_string)
@@ -1073,10 +1097,10 @@ class eway
     }
 
     /**
-     * Check if a card number is compliant with international standards
+     * Check if a card number is valid.
      *
      * This is based on ISO/IEC 7812-1:2006
-     * {@link http://en.wikipedia.org/wiki/ISO/IEC_7812 ISO/IEC 7812}
+     * {@link http://en.wikipedia.org/wiki/ISO/IEC_7812 ISO/IEC 7812}.
      *
      * @param $cardNumber string
      * @return bool
