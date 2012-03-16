@@ -115,28 +115,28 @@ class eway
     protected $cvn;
 
     /**
-     * The customer's IPv4 address
+     * The customer's IPv4 address.
      *
      * @var string
      */
     protected $customerIP;
 
     /**
-     * The customer's two character country code
+     * The customer's two character country code.
      *
      * @var string
      */
     protected $customerCountry;
 
     /**
-     * The two digit credit card expiry month
+     * The two digit credit card expiry month.
      *
      * @var string
      */
     protected $cardExpiryMonth;
 
     /**
-     * The two digit credit card expiry year
+     * The two digit credit card expiry year.
      *
      * @var string
      */
@@ -152,35 +152,35 @@ class eway
     protected $customerTransactionReference;
 
     /**
-     * eWay option 1
+     * eWay option 1.
      *
      * @var string
      */
     protected $option1;
 
     /**
-     * eWay option 2
+     * eWay option 2.
      *
      * @var string
      */
     protected $option2;
 
     /**
-     * eWay option 3
+     * eWay option 3.
      *
      * @var string
      */
     protected $option3;
 
     /**
-     * The eWay gateway URL
+     * The eWay gateway URL.
      *
      * @var string
      */
     protected $gatewayURL;
 
     /**
-     * The response from the gateway in XML format
+     * The response from the gateway in XML format.
      *
      * @var string
      */
@@ -236,7 +236,7 @@ class eway
 
     /**
      * The eWay option 1 returned by the gateway.
-     * This should be the same as $option1
+     * This should be the same as $option1.
      *
      * @var string
      */
@@ -600,7 +600,6 @@ class eway
 
     /**
      * The class constructor.
-     *
      * Chooses the payment method and whether is is a test payment.
      *
      * @param string $gateway The type of gateway to use: 'REAL_TIME',
@@ -840,7 +839,7 @@ class eway
     }
 
     /**
-     * Set the customer's country code.
+     * Set the customer's two digit country code.
      *
      * This is only required if $gateway is set to "GEO_IP_ANTI_FRAUD".
      *
@@ -862,7 +861,7 @@ class eway
     }
 
     /**
-     * Get the customer's country code.
+     * Get the customer's two digit country code.
      *
      * @return string The customer's country code
      */
