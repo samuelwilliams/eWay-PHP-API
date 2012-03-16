@@ -658,7 +658,11 @@ class eway
      */
     public function setCustomerID($id)
     {
-        if(strlen($id) > 8)
+        if(preg_match('/[^A-Za-z0-9]/', $id))
+        {
+            throw new ErrorException('Customer ID has invalid characters');
+        }
+        elseif(strlen($id) > 8)
         {
             throw new ErrorException('Customer ID cannot be longer than eight (8) characters');
         }
@@ -710,14 +714,16 @@ class eway
      */
     public function setCardHoldersName($name)
     {
-        $escaped_name = preg_replace('/[^A-Za-z\s\'-]/', '', $name);
-
-        if(strlen($escaped_name) > 50)
+        if(preg_match('/[^A-Za-z\s\'-\.]/', $name))
+        {
+            throw new ErrorException('Card holder name has invalid chracters.');
+        }
+        elseif(strlen($name) > 50)
         {
             throw new ErrorException('Card holder name longer than fifty (50) characters');
         }
 
-        $this->cardHoldersName = $escaped_name;
+        $this->cardHoldersName = $name;
 
         return $this;
     }
@@ -741,14 +747,14 @@ class eway
      */
     public function setCardNumber($number)
     {
-        $escaped_number = preg_replace('/[^\d]/', '', $number);
+        $number = preg_replace('/[^\d]/', '', $number);
 
-        if(strlen($escaped_number) > 20)
+        if(strlen($number) > 20)
         {
             throw new ErrorException('Card number longer than twenty (20) digits');
         }
 
-        $this->cardNumber = $escaped_number;
+        $this->cardNumber = $number;
 
         return $this;
     }
@@ -773,9 +779,13 @@ class eway
      */
     public function setCardExpiry($month, $year)
     {
-        if((intval($month) < 1) OR (intval($month) > 12) OR (intval($year) > 99))
+        if((intval($month) < 1) OR (intval($month) > 12))
         {
-            throw new ErrorException('Card expiry is invalid type');
+            throw new ErrorException('Card expiry month is invalid.');
+        }
+        elseif((intval($year) < 0) OR (intval($year) > 99))
+        {
+            throw new ErrorException('Card expiry year is invalid.');
         }
 
         $this->cardExpiryMonth = sprintf('%02d', intval($month));
@@ -807,29 +817,27 @@ class eway
     /**
      * Sets the customer's CVN.
      *
+     * This is only required if $gateway is set to
+     * "REAL_TIME_CVN"OR "GEO_IP_ANTI_FRAUD".
+     *
      * @param $cvn string|int
      * @return eway
      * @throws ErrorException
      */
     public function setCVN($cvn)
     {
-        $escaped_cvn = preg_replace('/[^\d]/', '', $cvn);
-
-        if(strlen($escaped_cvn) > 4)
+        if(!preg_match('/^\d{3,4}$/', (string) $cvn))
         {
-            throw new ErrorException('CVN is longer than four (4) digits');
+            throw new ErrorException('CVN is not valid.');
         }
 
-        $this->cvn = $escaped_cvn;
+        $this->cvn = $cvn;
 
         return $this;
     }
 
     /**
      * Get the card's CVN.
-     *
-     * This is only required if $gateway is set to
-     * "REAL_TIME_CVN"OR "GEO_IP_ANTI_FRAUD".
      *
      * @return string The card's CVN
      */
@@ -857,6 +865,7 @@ class eway
         }
 
         $this->customerCountry = $country;
+
         return $this;
     }
 
@@ -881,9 +890,7 @@ class eway
      */
     public function setCustomerIP($ip)
     {
-        $ip = str_replace('/[^\d\.]/', '', $ip);
-
-        if(!preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $ip))
+        if(!preg_match('/^\d{1,3}(\.\d{1,3}){3}$/', $ip))
         {
             throw new ErrorException('Not a valid IP address.');
         }
@@ -911,14 +918,14 @@ class eway
      */
     public function setCustomerFirstName($name)
     {
-        $escaped_name = preg_replace('/[^A-Za-z\s\'-]/', '', $name);
+        $name = preg_replace('/[^A-Za-z\s\'-]/', '', $name);
 
-        if(strlen($escaped_name) > 50)
+        if(strlen($name) > 50)
         {
             throw new ErrorException('Customer name longer than fifty (50) characters');
         }
 
-        $this->customerFirstName = $escaped_name;
+        $this->customerFirstName = $name;
 
         return $this;
     }
@@ -942,14 +949,14 @@ class eway
      */
     public function setCustomerLastName($name)
     {
-        $escaped_name = preg_replace('/[^A-Za-z\s\'-]/', '', $name);
+        $name = preg_replace('/[^A-Za-z\s\'-]/', '', $name);
 
-        if(strlen($escaped_name) > 50)
+        if(strlen($name) > 50)
         {
             throw new ErrorException('Customer name longer than fifty (50) characters');
         }
 
-        $this->customerLastName = $escaped_name;
+        $this->customerLastName = $name;
 
         return $this;
     }
@@ -972,7 +979,7 @@ class eway
      */
     public function setCustomerEmail($email)
     {
-        if(!preg_match('/[\w-\.]+@(?:[\w]+\.)+[a-zA-Z]{2,4}/', $email))
+        if(!preg_match('/^[\w-\.]+@(?:[\w]+\.)+[a-zA-Z]{2,4}$/', $email))
         {
             throw new ErrorException('Invalid email address.');
         }
