@@ -698,11 +698,11 @@ class eway
     /**
      * Get the payment amount.
      *
-     * @return int The total amount in cents
+     * @return float The total amount in decimal dollars
      */
     public function getPaymentAmount()
     {
-        return $this->paymentAmount;
+        return round($this->paymentAmount/100, 2);
     }
 
     /**
