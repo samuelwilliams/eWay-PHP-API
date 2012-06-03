@@ -1540,7 +1540,7 @@ class eway
         }
 
         $cardNumber = str_split($cardNumber);
-        $checkDigit = intval(end($cardNumber));
+        $checkDigit = (int) end($cardNumber);
         $sum = 0;
 
         for($i = 1; $i < count($cardNumber); $i++)
