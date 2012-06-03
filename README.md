@@ -36,4 +36,4 @@ Each setter method will return the eway class allowing for chaining.
 
 ## License
 
-This software is free to use and distribute. Please see [the license file](LICENCE).
+This software is free to use and distribute. Please see [the license file](https://github.com/samuelwilliams/eWay-PHP-API/blob/master/LICENSE).
