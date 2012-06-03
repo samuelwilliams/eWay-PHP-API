@@ -605,6 +605,7 @@ class eway
      * @param string $gateway The type of gateway to use: 'REAL_TIME',
      * 'REAL_TIME_CVN' or 'GEO_IP_ANTI_FRAUD'
      * @param bool $test_gateway Use test gateway
+     * @throws ErrorException
      */
     public function __construct($gateway = 'REAL_TIME_CVN', $test_gateway = FALSE)
     {
@@ -685,7 +686,7 @@ class eway
     /**
      * Sets the payment amount.
      *
-     * @param $amount float Payment amount in whole dollars
+     * @param $amount float Payment amount in decimal dollars
      * @return eway
      */
     public function setPaymentAmount($amount)
@@ -976,6 +977,7 @@ class eway
      *
      * @param $email string The customer's email
      * @return eway
+     * @throws ErrorException
      */
     public function setCustomerEmail($email)
     {
