@@ -1,6 +1,6 @@
 # eWay PHP API
 
-This class is designed to make eWay payments very easy. Details about the API can be found on the [eWay website](http://eway.com.au/developers/api/stored-\(xml\).html)
+This class is designed to make eWay payments very easy. Details about the API can be found on the [eWay website](http://eway.com.au/developers/api/direct-payments.html)
 
 ## Example usage
 
