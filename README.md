@@ -1,16 +1,19 @@
-# eWay PHP API
+eWay PHP API
+============
 
-This class is designed to make eWay payments very easy. Details about the API can be found on the [eWay website](http://eway.com.au/developers/api/direct-payments.html)
+This class is designed to make eWay payments very easy. Details about the API can be found on the [eWay website](http://eway.com.au/developers/api/stored-\(xml\).html)
 
 ## Example usage
 
 The example below utilises the eWay test gateway
 
-    require_once('eway.php');
+    require_once __DIR__ . '/eWay/eWay.php';
 
-    $eway = new eway('REAL_TIME_CVN', TRUE);
+    use Badcow\eWay\eWay;
 
-    $eway
+    $eWay = new eWay('REAL_TIME_CVN', TRUE);
+
+    $eWay
         ->setCustomerID('87654321')
         ->setCardNumber('4444333322221111')
         ->setCardHoldersName('John Smith')
@@ -30,7 +33,7 @@ The example below utilises the eWay test gateway
         ->setOption3('Option Number Three')
         ;
 
-    $eway->pay();
+    $eWay->pay();
 
 Each setter method will return the eway class allowing for chaining.
 
