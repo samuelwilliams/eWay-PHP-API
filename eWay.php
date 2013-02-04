@@ -10,6 +10,8 @@
 
 namespace Badcow\eWay;
 
+use \ErrorException;
+
 class eWay
 {
     /**
