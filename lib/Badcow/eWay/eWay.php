@@ -1238,7 +1238,7 @@ class eWay
      */
     public function setPaymentXML()
     {
-        $xml = new SimpleXMLElement('<ewaygateway/>');
+        $xml = new \SimpleXMLElement('<ewaygateway/>');
 
         if(isset($this->customerID)) $xml->addChild('ewayCustomerID', $this->customerID);
         if(isset($this->paymentAmount)) $xml->addChild('ewayTotalAmount', $this->paymentAmount);
