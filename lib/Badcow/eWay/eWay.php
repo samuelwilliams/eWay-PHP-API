@@ -972,7 +972,7 @@ class eWay
      */
     public function setCustomerEmail($email)
     {
-        if(!preg_match('/^[\w-\.]+@(?:[\w]+\.)+[a-zA-Z]{2,4}$/', $email))
+        if(!preg_match('/^\w+([-+.\']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/', $email))
         {
             throw new ErrorException('Invalid email address.');
         }
